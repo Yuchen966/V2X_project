@@ -1,0 +1,99 @@
+<tls>
+	<tlLogic id="j1" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j10" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j11" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j12" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j13" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j14" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j15" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j16" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j2" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j3" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j4" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j5" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j6" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j7" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j8" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	<tlLogic id="j9" type="static" programID="ud" offset="0">
+	    <phase duration="42" state="GGgrrrGGgrrr"/>
+	</tlLogic>
+	
+	<tlLogic id="j1" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j10" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j11" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j12" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j13" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j14" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j15" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j16" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j2" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j3" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j4" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j5" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j6" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j7" type="static" programID="lr" offset="0">
+	   <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j8" type="static" programID="lr" offset="0">
+		<phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+	<tlLogic id="j9" type="static" programID="lr" offset="0">
+	    <phase duration="42" state="rrrGGgrrrGGg"/>
+	</tlLogic>
+</tls>

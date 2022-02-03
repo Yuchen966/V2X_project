@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<buildspec version="4.0">
+    <dir makemake-options="--deep -O out -KVEINS_PROJ=/home/yuchen/Documents/omnetpp-5.7-linux-x86_64/veins-5.1/veins-veins-5.1 -DVEINS_IMPORT -I. -I$(VEINS_PROJ)/src -Isrc -L$(VEINS_PROJ)/src -lveins$(D) --meta:export-include-path --meta:use-exported-include-paths --meta:use-exported-libs --meta:feature-cflags --meta:feature-ldflags" path="." type="makemake"/>
+</buildspec>

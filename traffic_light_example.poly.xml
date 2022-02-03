@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-06-03 19:10:40 by Eclipse SUMO netedit Version v1_9_2+0321-d37bbf0ca9
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="/home/sangyoung/src/omnetpp-5.6.2/samples/wave_example/straight.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="/home/sangyoung/src/omnetpp-5.6.2/samples/wave_example/straight.net.xml"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="false"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+    <netedit>
+        <additional-files value="/home/sangyoung/src/omnetpp-5.6.2/samples/wave_example/straight.poly.xml"/>
+    </netedit>
+
+    <report>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <poly id="poly_0" type="building" color="red" fill="0" layer="0.00" shape="292.397996,74.921555 285.947334,15.022549 395.608591,17.787119 384.550313,76.303839 292.229141,74.777557"/>
+</additional>
