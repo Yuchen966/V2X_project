@@ -7,7 +7,7 @@ As a network, we think the first step a straight road (1 km length) with one int
 
 First, we want to set a scenario that when the emergency vehicle is driving into a defined distance to the intersection, the traffic light plan should change to a plan that gives green light to all vehicles in this direction. Then we would also like to try to optimize the traffic light plans so that it would not cause severe congestion to vehicles in the other direction, under the condition of ensuring the emergency vehicle passes through without stopping or slowing down.
 
-## Steps:
+## Steps: 
 Our goal is to reduce the time for an emergency vehicle to get through traffic lights.
 1: We can set a network by using SUMO and the first network will be a straight line (1km) with an intersection with traffic lights at 0.75km. (further: a more complex scenario, for example, two intersections with traffic lights)
 2: we will set a  random number of vehicles to make a traffic jam and the vehicles have the same speed(further: two or three kinds of speeds)
