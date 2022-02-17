@@ -35,6 +35,7 @@ namespace veins {
  *     string laneId;
  *     simtime_t timeStampP;
  *     LAddress::L2Type senderAddress = -1;
+ *     bool isEV = false;
  * }
  * </pre>
  */
@@ -46,6 +47,7 @@ class TlMsg : public ::veins::BaseFrame1609_4
     ::omnetpp::opp_string laneId;
     ::omnetpp::simtime_t timeStampP;
     LAddress::L2Type senderAddress;
+    bool isEV;
 
   private:
     void copy(const TlMsg& other);
@@ -77,6 +79,8 @@ class TlMsg : public ::veins::BaseFrame1609_4
     virtual LAddress::L2Type& getSenderAddress();
     virtual const LAddress::L2Type& getSenderAddress() const {return const_cast<TlMsg*>(this)->getSenderAddress();}
     virtual void setSenderAddress(const LAddress::L2Type& senderAddress);
+    virtual bool getIsEV() const;
+    virtual void setIsEV(bool isEV);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const TlMsg& obj) {obj.parsimPack(b);}

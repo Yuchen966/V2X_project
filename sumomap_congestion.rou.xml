@@ -2,7 +2,7 @@
 
 <routes>
   <vType accel="3.0" decel="2.2" id="carA" type="passenger" length="5.0" minGap="2.5" maxSpeed="45.0" sigma="0.5" />
-  <vType accel="5.0" decel="2.2" id="carB" type="emergency" length="8.0" minGap="3.5" maxSpeed="60.0" sigma="0.5" />
+  <vType accel="5.0" decel="2.2" id="EmergencyVehicle" type="emergency" length="8.0" minGap="3.5" maxSpeed="60.0" sigma="0.5" />
 
 
 
@@ -30,7 +30,7 @@
   <flow id="carflow00" type="carA" beg="0" end="75" number="12" from="-L35" to="L47" color="1,1,0"/>
   
   
-  <trip id="ev" type="carB" depart="50" from="L11" to="L00" via="L4 -L3 L49" color="0,1,1"/>
+  <trip id="ev" type="EmergencyVehicle" depart="0.5" from="L11" to="L00" via="L4 -L3 L49" color="0,1,1"/>
   
   </routes>
 

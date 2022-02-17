@@ -23,6 +23,12 @@ Define_Module(veins::TlVehicle);
 
 void TlVehicle::initialize(int stage) {
     DemoBaseApplLayer::initialize(stage);
+
+    std::cout << traciVehicle->getTypeId() << std::endl;
+    if (myId!=0 && traciVehicle->getTypeId() == "EmergencyVehicle") {
+        std::cout << "I am the emergency vehicle!!! Get out of my way!!! My id is " << myId << std::endl;
+    }
+
     if (stage ==0 ) {
         currentSubscribedServiceId = -1;
         sendPeriod = 1;
@@ -59,6 +65,9 @@ void TlVehicle::handleSelfMsg(cMessage* msg) {
         tlMsg->setTimeStampP(simTime());
         tlMsg->setLaneId(traciVehicle->getLaneId().c_str());
         tlMsg->setChannelNumber(static_cast<int>(currentSubscribedChannel));
+        if (traciVehicle->getTypeId() == "EmergencyVehicle") {
+            tlMsg->setIsEV(true);
+        }
         sendDown(tlMsg->dup());
         delete tlMsg;
         //std::cout << "WSM sent at " << simTime() << std::endl;

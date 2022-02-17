@@ -184,6 +184,7 @@ TlMsg::TlMsg(const char *name, short kind) : ::veins::BaseFrame1609_4(name,kind)
 {
     this->timeStampP = 0;
     this->senderAddress = -1;
+    this->isEV = false;
 }
 
 TlMsg::TlMsg(const TlMsg& other) : ::veins::BaseFrame1609_4(other)
@@ -210,6 +211,7 @@ void TlMsg::copy(const TlMsg& other)
     this->laneId = other.laneId;
     this->timeStampP = other.timeStampP;
     this->senderAddress = other.senderAddress;
+    this->isEV = other.isEV;
 }
 
 void TlMsg::parsimPack(omnetpp::cCommBuffer *b) const
@@ -220,6 +222,7 @@ void TlMsg::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->laneId);
     doParsimPacking(b,this->timeStampP);
     doParsimPacking(b,this->senderAddress);
+    doParsimPacking(b,this->isEV);
 }
 
 void TlMsg::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -230,6 +233,7 @@ void TlMsg::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->laneId);
     doParsimUnpacking(b,this->timeStampP);
     doParsimUnpacking(b,this->senderAddress);
+    doParsimUnpacking(b,this->isEV);
 }
 
 Coord& TlMsg::getSenderPos()
@@ -280,6 +284,16 @@ LAddress::L2Type& TlMsg::getSenderAddress()
 void TlMsg::setSenderAddress(const LAddress::L2Type& senderAddress)
 {
     this->senderAddress = senderAddress;
+}
+
+bool TlMsg::getIsEV() const
+{
+    return this->isEV;
+}
+
+void TlMsg::setIsEV(bool isEV)
+{
+    this->isEV = isEV;
 }
 
 class TlMsgDescriptor : public omnetpp::cClassDescriptor
@@ -347,7 +361,7 @@ const char *TlMsgDescriptor::getProperty(const char *propertyname) const
 int TlMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 5+basedesc->getFieldCount() : 5;
+    return basedesc ? 6+basedesc->getFieldCount() : 6;
 }
 
 unsigned int TlMsgDescriptor::getFieldTypeFlags(int field) const
@@ -364,8 +378,9 @@ unsigned int TlMsgDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISEDITABLE,
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<6) ? fieldTypeFlags[field] : 0;
 }
 
 const char *TlMsgDescriptor::getFieldName(int field) const
@@ -382,8 +397,9 @@ const char *TlMsgDescriptor::getFieldName(int field) const
         "laneId",
         "timeStampP",
         "senderAddress",
+        "isEV",
     };
-    return (field>=0 && field<5) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<6) ? fieldNames[field] : nullptr;
 }
 
 int TlMsgDescriptor::findField(const char *fieldName) const
@@ -395,6 +411,7 @@ int TlMsgDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='l' && strcmp(fieldName, "laneId")==0) return base+2;
     if (fieldName[0]=='t' && strcmp(fieldName, "timeStampP")==0) return base+3;
     if (fieldName[0]=='s' && strcmp(fieldName, "senderAddress")==0) return base+4;
+    if (fieldName[0]=='i' && strcmp(fieldName, "isEV")==0) return base+5;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -412,8 +429,9 @@ const char *TlMsgDescriptor::getFieldTypeString(int field) const
         "string",
         "simtime_t",
         "LAddress::L2Type",
+        "bool",
     };
-    return (field>=0 && field<5) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<6) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **TlMsgDescriptor::getFieldPropertyNames(int field) const
@@ -485,6 +503,7 @@ std::string TlMsgDescriptor::getFieldValueAsString(void *object, int field, int 
         case 2: return oppstring2string(pp->getLaneId());
         case 3: return simtime2string(pp->getTimeStampP());
         case 4: {std::stringstream out; out << pp->getSenderAddress(); return out.str();}
+        case 5: return bool2string(pp->getIsEV());
         default: return "";
     }
 }
@@ -501,6 +520,7 @@ bool TlMsgDescriptor::setFieldValueAsString(void *object, int field, int i, cons
     switch (field) {
         case 2: pp->setLaneId((value)); return true;
         case 3: pp->setTimeStampP(string2simtime(value)); return true;
+        case 5: pp->setIsEV(string2bool(value)); return true;
         default: return false;
     }
 }

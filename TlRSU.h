@@ -24,7 +24,15 @@ typedef struct{
     int myId;
     Coord lastPos;
     Coord lastSpeed;
+    double dist;
 }CarData;
+
+enum OriEvType {
+    Left,
+    Right,
+    Up,
+    Down
+};
 
 class VEINS_API TlRSU: public DemoBaseApplLayer {
     public:
@@ -38,19 +46,27 @@ class VEINS_API TlRSU: public DemoBaseApplLayer {
     std::string trafficLightId;
     cMessage *initMsg, *phaseMsg;
     simtime_t controlPeriod;
+    bool evPlanGenerated = false;
 
         // variables and functions related to traffic light control algorithm
     std::vector<CarData> left, right, up, down; // vectors of meta data of cars from each direction. If you don't know about vector, you could google standard c++ library vector.
-    void checkAndAddLeft(int senderId, Coord senderPos, Coord senderSpeed);
-    void checkAndAddRight(int senderId, Coord senderPos, Coord senderSpeed);
-    void checkAndAddUp(int senderId, Coord senderPos, Coord senderSpeed);
-    void checkAndAddDown(int senderId, Coord senderPos, Coord senderSpeed);
+    void checkAndAddLeft(int senderId, Coord senderPos, Coord senderSpeed, double distance);
+    void checkAndAddRight(int senderId, Coord senderPos, Coord senderSpeed, double distance);
+    void checkAndAddUp(int senderId, Coord senderPos, Coord senderSpeed, double distance);
+    void checkAndAddDown(int senderId, Coord senderPos, Coord senderSpeed, double distance);
 
     void removeFromLeft(int senderId);
     void removeFromRight(int senderId);
     void removeFromUp(int senderId);
     void removeFromDown(int senderId);
     void removeFromVector(int senderId);
+
+    // Project functions
+    bool checkEvisUd(float dist_x, float dist_y, std::vector<CarData> &frontCars, OriEvType& evOri);
+    bool isLightForEV(std::string TlId, bool EVfromUD);
+    CarData evInit(int senderId, Coord relPos, Coord relSpeed);
+    
+    // Project variables
 };
 
 }

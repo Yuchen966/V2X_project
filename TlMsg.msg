@@ -31,4 +31,5 @@ packet TlMsg extends BaseFrame1609_4 {
     string laneId;
     simtime_t timeStampP;
     LAddress::L2Type senderAddress = -1;
+    bool isEV = false;
 }

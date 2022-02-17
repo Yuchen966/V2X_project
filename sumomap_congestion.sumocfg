@@ -5,11 +5,13 @@
     <input>
         <net-file value="sumomap.net.xml"/>
         <route-files value="sumomap_congestion.rou.xml"/>
+        <additional-files value="traffic_light_example.poly.xml, sumomap_congestion.tls.xml"/>
     </input>
 
     <time>
         <begin value="0"/>
         <end value="400"/>
+        <step-length value="0.1"/>
     </time>
 
     <processing>

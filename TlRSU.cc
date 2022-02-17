@@ -24,6 +24,17 @@ Define_Module(veins::TlRSU);
 #define TL_INIT_EVT 1234
 #define TL_CTRL_EVT 1235
 
+static const std::vector<double> TimePlatoonPassVec = {0.0, 2.2, 4.0, 6.0, 
+    8.0, 10.15, 12.3, 14.5, 16.7, 18.9, 21.15, 23.40, 25.70};
+static const double TimeEVPass = 200.0/60.0*3.6;
+
+// enum OriEvType {
+//     Left,
+//     Right,
+//     Up,
+//     Down
+// };
+
 void TlRSU::initialize(int stage) {
     DemoBaseApplLayer::initialize(stage);
     if (stage == 0) {
@@ -48,6 +59,7 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
         int senderId = tlm->getSenderAddress();
         Coord senderPos = tlm->getSenderPos();
         Coord senderSpeed = tlm->getSenderSpeed();
+        bool senderIsEV = tlm->getIsEV();
         ::omnetpp::opp_string laneId = tlm->getLaneId();
 
         double distance = (senderPos - curPosition).length();
@@ -59,11 +71,42 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
         Coord relSpeed = senderSpeed - curSpeed; // curSpeed is zero of course because this is an RSU
 
         if ( distance < 200 ){  // don't consider vehicles which are further away than 100 m
-            //if ( myId == 25 ) {
-            //    std::cout << "debug" << std::endl;
-            //}
             if ( relPos * relSpeed <= 0 ) { // think about vector inner product, this means that the vehicle is approaching the RSU
-                if ( std::abs(relPos.x) > std::abs(relPos.y) ) {
+                if (senderIsEV && !evPlanGenerated) {
+                    evPlanGenerated = true;
+                    std::cout <<  myId << ": The EV is approaching. I have to generate a new plan" << std::endl;
+                    std::vector<CarData> frontCars;
+                    CarData evCar = evInit(senderId, relPos, relSpeed);
+                    OriEvType evOri;
+
+                    // checking where EV is coming from and add front cars to frontCars[]
+                    bool isEvUd = checkEvisUd(relPos.x, relPos.y, frontCars, evOri);
+                    bool isGreenForEV = isLightForEV(trafficLightId, isEvUd);
+                    std::cout << "evFromUD: " << isEvUd << " frontCars num: " << frontCars.size() 
+                        << " greenForEV: " << isGreenForEV << std::endl;
+
+                    // main algorithm
+                    if (isGreenForEV) { // Now is green
+                        // The min green time for Traffic light for letting EV pass without deacceleration
+                        double timeTlGreenMin = std::max(TimePlatoonPassVec[frontCars.size()+1], TimeEVPass);
+                        // check if the remaining time for current green light time is enough
+                        bool isGreenEnough = (timeTlGreenMin < (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl());
+                        std::cout << "timeTlGreenMin: " << timeTlGreenMin << std::endl;
+                        std::cout << "traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl(): " << (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl() << std::endl;
+                        std::cout << "isGreenEnough: " << isGreenEnough << std::endl;
+                        if (!isGreenEnough) {
+                            traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(timeTlGreenMin));
+                            std::cout << "The remaining green time is now reset! Now the Duration becomes " << 
+                                (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl()<< std::endl;
+                        }
+                    } else { // Now is red
+                        // isChased()
+                    }
+                    
+
+                }
+
+                else if ( std::abs(relPos.x) > std::abs(relPos.y) ) {
                     if ( relPos.x < 0 ) // likely coming from the left
                         checkAndAddLeft(senderId, relPos, relSpeed);
                     else    // likely coming from the right
@@ -97,7 +140,7 @@ void TlRSU::handleSelfMsg(cMessage* msg) {
         if ( left.size() + right.size() < up.size() + down.size() ) // basically we're counting the number of cars from each direction
             traci->trafficlight(trafficLightId).setProgram("ud");
         else
-            traci->trafficlight(trafficLightId).setProgram("lr");
+            traci->trafficlight(trafficLightId).setProgram("ud");
 
         scheduleAt(simTime() + controlPeriod, phaseMsg);
     } else {
@@ -107,40 +150,16 @@ void TlRSU::handleSelfMsg(cMessage* msg) {
 
 std::string TlRSU::mapRSU2Tl(int id){
     switch(id){
-    case 25:
-        return "j1";
-    case 30:
-        return "j2";
-    case 35:
-        return "j3";
-    case 40:
-        return "j4";
-    case 45:
-        return "j5";
-    case 50:
-        return "j6";
-    case 55:
-        return "j7";
-    case 60:
-        return "j8";
-    case 65:
-        return "j9";
-    case 70:
-        return "j10";
-    case 75:
-        return "j11";
-    case 80:
-        return "j12";
-    case 85:
-        return "j13";
-    case 90:
-        return "j14";
-    case 95:
-        return "j15";
-    case 100:
-        return "j16";
+    case 13:
+        {return "cross1"; break;}
+    case 18:
+        {return "cross3"; break;}
+    case 23:
+        {return "cross4"; break;}
+    case 28:
+        {return "cross2"; break;}
     default:
-        EV_ERROR << "Don't know which TL this RSU should be mapped to."<< std::endl;
+        std::cout << "Don't know which TL this RSU should be mapped to."<< std::endl;
         return "";
     }
 }
@@ -286,4 +305,75 @@ void TlRSU::removeFromVector(int senderId){
 
     // if your program reaches this point, it means that you were trying to remove a vehicle which wasn't in the vector
     EV_ERROR << "Tried to remove a vehicle not in the vector" << std::endl;
+}
+
+// If coming from up/down, return true, left/right return false
+bool TlRSU::checkEvisUd(float dist_x, float dist_y, std::vector<CarData>& frontCars, OriEvType& evOri) {
+    if ( std::abs(dist_x) > std::abs(dist_y) ) {
+        if ( dist_x < 0 ) {// likely coming from the left
+            for (int i=0; i<left.size(); i++) 
+                frontCars.push_back(left[i]);
+            std::cout << "EV is coming from left." << std::endl;
+            evOri = Left;
+        } else {   // likely coming from the right
+            for (int i=0; i<right.size(); i++) 
+                frontCars.push_back(right[i]);
+            std::cout << "EV is coming from right." << std::endl;
+            evOri = Right;
+        }
+        return false;
+            
+    } else {
+        if ( dist_y < 0 ) { // likely coming from up
+            for (int i=0; i<left.size(); i++)
+                frontCars.push_back(up[i]);
+            std::cout << "EV is coming from up." << std::endl;
+            evOri = Up;
+        }
+            
+        else {   // likely coming from down
+            for (int i=0; i<left.size(); i++)
+                frontCars.push_back(down[i]);
+            std::cout << "EV is coming from down." << std::endl;
+            evOri = Down;
+        }
+        return true;
+    }
+    
+}
+
+// check whether the traffic light is green for Emergency Vehicle.
+// If it is green fro EV, return true, otherwise false.
+bool TlRSU::isLightForEV(std::string TlId, bool isEvUd) {
+    std::string curState = traci->trafficlight(TlId).getCurrentState();
+    if (isEvUd) {
+        if (curState[0] == 'G' || curState[0] == 'g') 
+            return true;
+        else
+            return false;
+    } else {
+        if (curState[0] == 'r') 
+            return true;
+        else
+            return false;
+    }
+}
+
+CarData TlRSU::evInit(int senderId, Coord relPos, Coord relSpeed) {
+    CarData evCarData;
+    evCarData.myId == senderId;
+    evCarData.lastPos = relPos;
+    evCarData.lastSpeed = relSpeed;
+    return evCarData;
+}
+
+// if EV will chase the closest car in front of it, return true.
+bool TlRSU::isChased(CarData evCar, std::vector<CarData> frontCars) {
+   if (frontCars.size() == 0)
+       return false;
+    // first get the position and the speed of the closest car
+   CarData carLast = frontCars[0]; // the closest car in front of the EV
+   for (int i=0; i<frontCars.size(); i++) {
+       if (carLast.lastPos frontCars.lastPos)
+   }
 }
