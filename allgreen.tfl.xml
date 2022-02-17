@@ -30,8 +30,9 @@
   </tlLogic>
   
   <tlLogic id="cross2" type="static" programID="ud" offset="0">
+     <phase duration="30" state="rrrGGgrrrGGg"/>
     <phase duration="45" state="GGgrrrGGgrrr"/>
-    <phase duration="45" state="rrrGGgrrrGGg"/>
+    <phase duration="15" state="rrrGGgrrrGGg"/>
   </tlLogic>
   
   <tlLogic id="cross3" type="static" programID="ud" offset="0">
