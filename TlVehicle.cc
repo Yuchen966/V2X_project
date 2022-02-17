@@ -24,7 +24,6 @@ Define_Module(veins::TlVehicle);
 void TlVehicle::initialize(int stage) {
     DemoBaseApplLayer::initialize(stage);
 
-    std::cout << traciVehicle->getTypeId() << std::endl;
     if (myId!=0 && traciVehicle->getTypeId() == "EmergencyVehicle") {
         std::cout << "I am the emergency vehicle!!! Get out of my way!!! My id is " << myId << std::endl;
     }

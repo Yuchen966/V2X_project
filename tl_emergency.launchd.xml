@@ -31,12 +31,21 @@
 // work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 -->
 
-<!-- debug config -->
-<launch>
+<!-- first test config -->
+<!-- <launch>
     <copy file="sumomap.net.xml" />
     <copy file="sumomap_congestion.rou.xml" />
     <copy file="traffic_light_example.poly.xml" />
     <copy file="sumomap_congestion.tls.xml" />
     <copy file="sumomap_congestion.sumocfg" type="config" />
+</launch> -->
+
+<!-- small congestion config -->
+<launch>
+    <copy file="sumomap-300m.net.xml" />
+    <copy file="sumomap_SmallCongestion.rou.xml" />
+    <copy file="hos.poly.xml" />
+    <copy file="allgreen.tfl.xml" />
+    <copy file="sumomap_SmallCongestion_g.sumocfg" type="config" />
 </launch>
 

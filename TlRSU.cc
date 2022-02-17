@@ -26,7 +26,7 @@ Define_Module(veins::TlRSU);
 
 static const std::vector<double> TimePlatoonPassVec = {0.0, 2.2, 4.0, 6.0, 
     8.0, 10.15, 12.3, 14.5, 16.7, 18.9, 21.15, 23.40, 25.70};
-static const double TimeEVPass = 200.0/60.0*3.6;
+static const double TimeEVPass = 15.0;
 static const double TimeSafe = 2.0;
 
 // enum OriEvType {
@@ -87,7 +87,6 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                         << " greenForEV: " << isGreenForEV << std::endl;
 
                     // main algorithm
-                    isChased(evCar, frontCars);
                     if (isGreenForEV) { // Now is green
                         // The min green time for Traffic light for letting EV pass without deacceleration
                         double timeTlGreenMin = std::max(TimePlatoonPassVec[frontCars.size()+1], TimeEVPass);
@@ -95,8 +94,10 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                         bool isGreenEnough = (timeTlGreenMin < (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl());
                         std::cout << "timeTlGreenMin: " << timeTlGreenMin << std::endl;
                         std::cout << "traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl(): " << (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl() << std::endl;
-                        std::cout << "isGreenEnough: " << isGreenEnough << std::endl;
-                        if (!isGreenEnough) {
+                        // std::cout << "isGreenEnough: " << isGreenEnough << std::endl;
+                        if (isGreenEnough) {
+                            std::cout << "The remaining green time is enough, stick to original plan.";
+                        } else {
                             traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(timeTlGreenMin));
                             std::cout << "The remaining green time is now reset! Now the Duration becomes " << 
                                 (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl()<< std::endl;
@@ -104,18 +105,24 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                     } else { // Now is red
                         if (isChased(evCar, frontCars)) { // chased
                             // set traffic light current state duration to 0
+                            std::cout << "EV is able to chase. Set traffic light to green." << std::endl;
                             traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(0.0));
                         } else { // not chased
                             double remainRedTime = (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl();
-                            if (!(TimeEVPass > (remainRedTime + TimeSafe))) { // not able to pass
+                            std::cout << "EV is not able to chase. remain some red light time." << std::endl;
+                            if (!((TimeEVPass - TimePlatoonPassVec[frontCars.size()]) > (remainRedTime + TimeSafe))) { // not able to pass
                                 traci->trafficlight(trafficLightId).setPhaseDuration(
                                     TimeEVPass - TimePlatoonPassVec[frontCars.size()] - TimeSafe
                                 );
+                                std::cout << "EV is able to pass. Stick to current plan." << std::endl;
+                            } else {
+                                std::cout << "EV is not able to pass. Change plan" << std::endl;
                             }
                         }
                     }
                 }
 
+                // normal vehicle, update Cardata lists
                 else if ( std::abs(relPos.x) > std::abs(relPos.y) ) {
                     if ( relPos.x < 0 ) // likely coming from the left
                         checkAndAddLeft(senderId, relPos, relSpeed);
