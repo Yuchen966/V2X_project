@@ -83,40 +83,40 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                     // checking where EV is coming from and add front cars to frontCars[]
                     bool isEvUd = checkEvisUd(relPos.x, relPos.y, frontCars, evOri);
                     bool isGreenForEV = isLightForEV(trafficLightId, isEvUd);
-                    std::cout << "evFromUD: " << isEvUd << " frontCars num: " << frontCars.size() 
-                        << " greenForEV: " << isGreenForEV << std::endl;
+                    std::cout << "Number of cars in front of EV: " << frontCars.size() << std::endl;
 
                     // main algorithm
-                    if (isGreenForEV) { // Now is green
+                    if (isGreenForEV) { // Current status of tl is green
                         // The min green time for Traffic light for letting EV pass without deacceleration
                         double timeTlGreenMin = std::max(TimePlatoonPassVec[frontCars.size()+1], TimeEVPass);
                         // check if the remaining time for current green light time is enough
-                        bool isGreenEnough = (timeTlGreenMin < (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl());
-                        std::cout << "timeTlGreenMin: " << timeTlGreenMin << std::endl;
-                        std::cout << "traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl(): " << (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl() << std::endl;
-                        // std::cout << "isGreenEnough: " << isGreenEnough << std::endl;
+                        double GreenRemainTime = (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl();
+                        bool isGreenEnough = (timeTlGreenMin < GreenRemainTime);
+                        std::cout << "Min green time for EV passing without decreasing: " << timeTlGreenMin << "s" << std::endl;
+                        std::cout << "Current green light remaining time until next switch red light: " << GreenRemainTime << "s" << std::endl;
                         if (isGreenEnough) {
                             std::cout << "The remaining green time is enough, stick to original plan.";
                         } else {
                             traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(timeTlGreenMin));
-                            std::cout << "The remaining green time is now reset! Now the Duration becomes " << 
-                                (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl()<< std::endl;
+                            std::cout << "The remaining green time is not enough, so let's reset! Now the Duration becomes " << 
+                                (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl()<< "s" << std::endl;
                         }
-                    } else { // Now is red
+                    } else { // Current status of tl is red
                         if (isChased(evCar, frontCars)) { // chased
                             // set traffic light current state duration to 0
                             std::cout << "EV is able to chase. Set traffic light to green." << std::endl;
                             traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(0.0));
                         } else { // not chased
-                            double remainRedTime = (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl();
-                            std::cout << "EV is not able to chase. remain some red light time." << std::endl;
-                            if (!((TimeEVPass - TimePlatoonPassVec[frontCars.size()]) > (remainRedTime + TimeSafe))) { // not able to pass
+                            double RedremainTime = (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl();
+                            std::cout << "EV won't chase the platoon. The remaining red light time is " << RedremainTime << "s" << std::endl;
+                            if (!((TimeEVPass - TimePlatoonPassVec[frontCars.size()]) > (RedremainTime + TimeSafe))) { // not able to pass
                                 traci->trafficlight(trafficLightId).setPhaseDuration(
                                     TimeEVPass - TimePlatoonPassVec[frontCars.size()] - TimeSafe
                                 );
-                                std::cout << "EV is able to pass. Stick to current plan." << std::endl;
+                                std::cout << "EV is able to pass with current plan. Just stick to current plan." << std::endl;
                             } else {
-                                std::cout << "EV is not able to pass. Change plan" << std::endl;
+                                std::cout << "EV is not able to pass with current plan. Switch to green immediately." << std::endl;
+                                traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(0.0));
                             }
                         }
                     }
