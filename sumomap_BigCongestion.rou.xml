@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<routes>
+  <vType accel="3.0" decel="2.2" id="carA" type="passenger" length="5" minGap="2.5" maxSpeed="12.5" sigma="0.5" />
+  <vType accel="10000" decel="100000" id="EmergencyVehicle" type="emergency" length="7" minGap="4" maxSpeed="16.7" sigma="0.5" />
+
+
+
+  <flow id="carflow01" type="carA" beg="0" end="0" number="4" from="-L12" to="L36" color="0,1,0" />
+  <flow id="carflow02" type="carA" beg="0" end="0" number="12" from="-L35" to="L98" color="0,1,0"/>
+  <flow id="carflow03" type="carA" beg="0" end="0" number="10"  from="L11" to="L36" color="0,1,0" />
+
+
+
+  <flow id="carflow2" type="carA" beg="0" end="0" number="4" from="-L12" to="-L24" color="1,1,0" />
+  <flow id="carflow3" type="carA" beg="0" end="0" number="8" from="L23" to="L47" color="1,1,0"/>
+  <flow id="carflow4" type="carA" beg="0" end="0" number="8" from="L24" to="L36" color="1,1,0"/>
+
+  <flow id="carflow5" type="carA" beg="0" end="0" number="8" from="-L98" to="-L11"  color="1,0,0"/>
+  <flow id="carflow6" type="carA" beg="0" end="0" number="8" froms="-L47" to="-L23" color="1,0,0"/>
+
+
+
+
+  <flow id="carflow22" type="carA" beg="50" end="70" number="4" from="-L12" to="-L24" color="1,1,0" />
+  <flow id="carflow33" type="carA" beg="50" end="70" number="4" from="L23" to="L47" color="1,1,0"/>
+  <flow id="carflow44" type="carA" beg="50" end="70" number="4" from="L24" to="L36" color="1,1,0"/>
+
+  <flow id="carflow55" type="carA" beg="50" end="70" number="4" from="-L98" to="-L11" color="1,0,0"/>
+  
+
+
+  <trip id="ev" type="EmergencyVehicle" depart="30" from="L11" to="L00" via="L4 -L3 L49" color="0,1,1"/>
+
+
+
+
+
+
+
+</routes>
+
+
