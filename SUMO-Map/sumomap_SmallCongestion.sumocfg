@@ -5,7 +5,7 @@
     <input>
         <net-file value="sumomap-300m.net.xml"/>
         <route-files value="sumomap_SmallCongestion.rou.xml"/>
-        <additional-files value="hos.poly.xml"/>
+        <additional-files value="hos.poly.xml, allgreen.tfl.xml"/>
         
     </input>
 
