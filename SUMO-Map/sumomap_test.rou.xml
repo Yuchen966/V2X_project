@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+  <vType accel="3.0" decel="6.0" id="CarA" length="5.0" minGap="2.5" maxSpeed="30.0" sigma="0.5" />
+  
+
+  
+  <route id="route01" edges="L11 -L1 L2"/>
+  <route id="route02" edges="L11 L4 -L3 L48"/>
+  
+
+  <vehicle depart="5" id="veh0" route="route01" type="CarA" color="1,0,0" />
+  <vehicle depart="5" id="veh00" route="route02" type="CarA" color="1,0,0" />
+  <vehicle depart="20" id="veh1" route="route01" type="CarA" color="1,1,0" />
+  <vehicle depart="30" id="veh2" route="route01" type="CarA" color="1,1,0" />
+  <vehicle depart="40" id="veh3" route="route01" type="CarA" color="1,0,0" />
+  <vehicle depart="50" id="veh4" route="route02" type="CarA" color="1,0,0" />
+  
+  
+  </routes>
+ 
+ 
+ 
