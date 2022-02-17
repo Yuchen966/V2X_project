@@ -46,6 +46,6 @@
     <copy file="sumomap_SmallCongestion.rou.xml" />
     <copy file="hos.poly.xml" />
     <copy file="allgreen.tfl.xml" />
-    <copy file="sumomap_SmallCongestion_g.sumocfg" type="config" />
+    <copy file="sumomap_SmallCongestion.sumocfg" type="config" />
 </launch>
 
