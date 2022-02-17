@@ -50,10 +50,10 @@ class VEINS_API TlRSU: public DemoBaseApplLayer {
 
         // variables and functions related to traffic light control algorithm
     std::vector<CarData> left, right, up, down; // vectors of meta data of cars from each direction. If you don't know about vector, you could google standard c++ library vector.
-    void checkAndAddLeft(int senderId, Coord senderPos, Coord senderSpeed, double distance);
-    void checkAndAddRight(int senderId, Coord senderPos, Coord senderSpeed, double distance);
-    void checkAndAddUp(int senderId, Coord senderPos, Coord senderSpeed, double distance);
-    void checkAndAddDown(int senderId, Coord senderPos, Coord senderSpeed, double distance);
+    void checkAndAddLeft(int senderId, Coord senderPos, Coord senderSpeed);
+    void checkAndAddRight(int senderId, Coord senderPos, Coord senderSpeed);
+    void checkAndAddUp(int senderId, Coord senderPos, Coord senderSpeed);
+    void checkAndAddDown(int senderId, Coord senderPos, Coord senderSpeed);
 
     void removeFromLeft(int senderId);
     void removeFromRight(int senderId);
@@ -64,7 +64,8 @@ class VEINS_API TlRSU: public DemoBaseApplLayer {
     // Project functions
     bool checkEvisUd(float dist_x, float dist_y, std::vector<CarData> &frontCars, OriEvType& evOri);
     bool isLightForEV(std::string TlId, bool EVfromUD);
-    CarData evInit(int senderId, Coord relPos, Coord relSpeed);
+    CarData evInit(int senderId, Coord relPos, Coord relSpeed);\
+    bool isChased(CarData evCar, std::vector<CarData> frontCars);
     
     // Project variables
 };

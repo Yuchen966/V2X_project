@@ -27,6 +27,7 @@ Define_Module(veins::TlRSU);
 static const std::vector<double> TimePlatoonPassVec = {0.0, 2.2, 4.0, 6.0, 
     8.0, 10.15, 12.3, 14.5, 16.7, 18.9, 21.15, 23.40, 25.70};
 static const double TimeEVPass = 200.0/60.0*3.6;
+static const double TimeSafe = 2.0;
 
 // enum OriEvType {
 //     Left,
@@ -86,6 +87,7 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                         << " greenForEV: " << isGreenForEV << std::endl;
 
                     // main algorithm
+                    isChased(evCar, frontCars);
                     if (isGreenForEV) { // Now is green
                         // The min green time for Traffic light for letting EV pass without deacceleration
                         double timeTlGreenMin = std::max(TimePlatoonPassVec[frontCars.size()+1], TimeEVPass);
@@ -100,10 +102,18 @@ void TlRSU::onWSM(BaseFrame1609_4* frame) {
                                 (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl()<< std::endl;
                         }
                     } else { // Now is red
-                        // isChased()
+                        if (isChased(evCar, frontCars)) { // chased
+                            // set traffic light current state duration to 0
+                            traci->trafficlight(trafficLightId).setPhaseDuration(SimTime(0.0));
+                        } else { // not chased
+                            double remainRedTime = (traci->trafficlight(trafficLightId).getAssumedNextSwitchTime() - simTime()).dbl();
+                            if (!(TimeEVPass > (remainRedTime + TimeSafe))) { // not able to pass
+                                traci->trafficlight(trafficLightId).setPhaseDuration(
+                                    TimeEVPass - TimePlatoonPassVec[frontCars.size()] - TimeSafe
+                                );
+                            }
+                        }
                     }
-                    
-
                 }
 
                 else if ( std::abs(relPos.x) > std::abs(relPos.y) ) {
@@ -369,11 +379,30 @@ CarData TlRSU::evInit(int senderId, Coord relPos, Coord relSpeed) {
 
 // if EV will chase the closest car in front of it, return true.
 bool TlRSU::isChased(CarData evCar, std::vector<CarData> frontCars) {
-   if (frontCars.size() == 0)
+    if (frontCars.size() == 0)
        return false;
-    // first get the position and the speed of the closest car
-   CarData carLast = frontCars[0]; // the closest car in front of the EV
-   for (int i=0; i<frontCars.size(); i++) {
-       if (carLast.lastPos frontCars.lastPos)
-   }
+
+    // first get the closest car
+    CarData carLast = frontCars[0]; // the closest car in front of the EV
+    double distMin = 500.0;
+    for (int i=0; i<frontCars.size(); i++) {
+        if ((frontCars[i].lastPos-evCar.lastPos).length() < distMin) {
+            distMin = (carLast.lastPos-evCar.lastPos).length();
+            carLast = frontCars[i];
+        }
+    }
+
+    // then check if it can be chased
+    if (std::abs(carLast.lastSpeed.length()) > 40.0/3.6) { // the last car is moving at max speed
+        double timeChase = (carLast.lastPos - evCar.lastPos).length() / (carLast.lastSpeed - evCar.lastSpeed).length();
+        std::cout << "timeChase: " << timeChase << std::endl;
+        std::cout << "distance: " << (carLast.lastPos - evCar.lastPos).length() << std::endl;
+        std::cout << "relSpeed: " << (carLast.lastSpeed - evCar.lastSpeed).length();
+        
+        if (timeChase > TimeEVPass + TimeSafe) // not chased when crossing the intersection
+            return false;
+        else
+            return true;
+    }
+    
 }
