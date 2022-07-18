@@ -9,12 +9,12 @@ First, we want to set a scenario that when the emergency vehicle is driving into
 
 ## Steps: 
 Our goal is to reduce the time for an emergency vehicle to get through traffic lights.
-1: We can set a network by using SUMO and the first network will be a straight line (1km) with an intersection with traffic lights at 0.75km. (further: a more complex scenario, for example, two intersections with traffic lights)
-2: we will set a  random number of vehicles to make a traffic jam and the vehicles have the same speed(further: two or three kinds of speeds)
-3: achieve the communication between traffic lights and vehicles at a certain distance and make traffic lights know the speed and position of the vehicles.
-4: come up with an optimization algorithm for traffic lights controlling  to reduce time 
-5: compare the time with and without optimization algorithm
-6: research the average time and average throughput (second optimization term)
-7: research the different influences of time in different directions.
+1. We can set a network by using SUMO and the first network will be a straight line (1km) with an intersection with traffic lights at 0.75km. (further: a more complex scenario, for example, two intersections with traffic lights)
+2. we will set a  random number of vehicles to make a traffic jam and the vehicles have the same speed(further: two or three kinds of speeds)
+3. achieve the communication between traffic lights and vehicles at a certain distance and make traffic lights know the speed and position of the vehicles.
+4.come up with an optimization algorithm for traffic lights controlling  to reduce time 
+5. compare the time with and without optimization algorithm
+6. research the average time and average throughput (second optimization term)
+7. research the different influences of time in different directions.
 
 [Google drive link](https://drive.google.com/drive/u/0/folders/1mLzypaPHBv0e057QBtl6o5c_BoqpQsQ0)
